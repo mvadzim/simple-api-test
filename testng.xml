@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
+<suite name="simple-api-test">
+    <parameter name="maxResponseTimeMs" value="${max_response_time_ms}"/>
+    <parameter name="BaseURI" value="${baseuri}"/>
+    <test name="MyFirstTest">
+        <classes>
+            <class name="reqres.simple_api_test.UserTest"/>
+        </classes>
+    </test>
+</suite>
