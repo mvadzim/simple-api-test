@@ -1,0 +1,24 @@
+[
+  {
+    "name": "Ignored tests",
+    "matchedStatuses": ["skipped"]
+  },
+  {
+    "name": "Status code error",
+    "matchedStatuses": ["failed"],
+    "messageRegex": ".*Expected status code .* but was .*"
+  },
+  {
+    "name": "Slow API response",
+    "matchedStatuses": ["failed"],
+    "traceRegex": ".*Expected response time was not a value.*"
+  },
+  {
+    "name": "Product defects (all)",
+    "matchedStatuses": ["failed"]
+  },
+  {
+    "name": "Test defects",
+    "matchedStatuses": ["broken"]
+  }
+]

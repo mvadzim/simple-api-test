@@ -1,57 +1,56 @@
 package reqres.simple_api_test;
 
-import io.restassured.http.ContentType;
 import org.testng.annotations.Test;
-import org.testng.Reporter;
+import io.qameta.allure.Epic;
+import io.qameta.allure.Feature;
+import io.qameta.allure.Story;
+import io.qameta.allure.Description;
 
 import static io.restassured.RestAssured.*;
 import static io.restassured.module.jsv.JsonSchemaValidator.*;
-
 import static org.hamcrest.Matchers.*;
 
+
+@Test(description = "User API", groups = {"user","api"})
+@Epic("Epic API для работы с пользователями")
+@Feature("Feature Получение информации о пользователе и его авторизация")
 public class UserTest extends BaseTest {
-    private static final String getUserApiPath = "/api/users/{id}";
-    @Test
+
+    @Test(description = "Получить существующего пользователя")
+    @Story("Story Зная id пользователя через api получаю данные о пользователе ")
+    @Description("Проверяем 200 ответ, соответствие json схеме и правильность имени.")
     public void getExistUser() {
-        Reporter.log("-> Get exist user", true);
         given().
-        when().
-                log().ifValidationFails().
-                get(getUserApiPath, 2).
-        then().
-                log().ifValidationFails().
-                contentType(ContentType.JSON).
+                when().
+                get(EndPoints.getUser, 2).
+                then().
+                spec(Spec.baseResponseSpec).
                 statusCode(200).
                 body("data.first_name", equalTo("Janet")).
-                body(matchesJsonSchemaInClasspath("json_schema/getUserSchema.json")).
-                time(lessThan(maxResponseTimeMs));
+                body(matchesJsonSchemaInClasspath("json_schema/getUserSchema.json"));
     }
-    @Test
+
+    @Test(description = "Получить не существующего пользователя")
     public void getNonExistUser() {
-        Reporter.log("-> Get non exist user", true);
-        given().
         when().
-                log().ifValidationFails().
-                get(getUserApiPath, 22).
-        then().
-                log().ifValidationFails().
-                contentType(ContentType.JSON).
+                get(EndPoints.getUser, 22).
+                then().
+                spec(Spec.errorResponseSpec).
                 statusCode(404).
-                body(equalTo("{}")).
-                time(lessThan(maxResponseTimeMs));;
+                body(equalTo("{}"));
+
     }
-    @Test
+
+    @Test(description = "Авториация")
     public void loginUser() {
-        Reporter.log("-> Login user", true);
         final String loginPasswordJson = "{\"email\": \"peter@klaven\", \"password\": \"cityslicka\"}";
+
         given().
-                contentType("application/json").
                 body(loginPasswordJson).
-        when().
-                log().ifValidationFails().
-                post("/api/login").
-        then().
-                log().ifValidationFails().
+                when().
+                post(EndPoints.loginUser).
+                then().
+                spec(Spec.baseResponseSpec).
                 statusCode(200).
                 body("token", equalTo("QpwL5tke4Pnpja7X"));
     }
